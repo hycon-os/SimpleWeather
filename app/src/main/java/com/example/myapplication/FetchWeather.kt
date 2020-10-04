@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import android.content.Context
+import com.example.myapplication.data.WeatherData
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -8,8 +11,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.io.File
+import java.io.FileInputStream
+import java.io.ObjectInputStream
 
-class FetchWeather {
+
+class FetchWeather(val context :Context) {
 
     private val apiKey = "a9a5a8c0a12e5b11ae2fc673c8edf0c2"
 
@@ -46,15 +53,13 @@ class FetchWeather {
                 response: Response<JsonObject?>
             ) {
                 if (response.code() == 200) {
-                    val main = response.body()?.getAsJsonObject("main")
-                    val sys = response.body()?.getAsJsonObject("sys")
-                    val weather = response.body()?.getAsJsonArray("weather")?.get(0)?.asJsonObject
-                    var sunset = sys?.get("sunset")!!.asLong
-                    var sunrise = sys?.get("sunrise").asLong
-                    var id = weather?.get("id")!!.asInt
-                    var temp = main?.get("temp")
-                    var icon = mapConditionIconToCode(id, sunrise, sunset)
-                    println(icon)
+
+                    var json = Gson().fromJson(response.body(), WeatherData::class.java)
+                    val utils = JsonUtils()
+                    val file = File(context.getCacheDir(), "").toString() + "cacheFile.srl"
+                    utils.save(file,json)
+                    val output = utils.load(file)
+                    println(output!!.main.temp)
                 }
             }
         })

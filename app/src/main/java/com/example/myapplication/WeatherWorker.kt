@@ -6,7 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
 
-class WeatherWorker(context: Context, workerParams: WorkerParameters) : Worker(
+class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Worker(
     context,
     workerParams
 ) {
@@ -16,7 +16,7 @@ class WeatherWorker(context: Context, workerParams: WorkerParameters) : Worker(
     private var gotLocation: Boolean = false
     override fun doWork(): Result {
 
-        val fetch = FetchWeather()
+        val fetch = FetchWeather(context)
 
             getLastKnownLocation()
 
