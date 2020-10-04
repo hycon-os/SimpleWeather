@@ -6,26 +6,17 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
 
+class WeatherWorker(context: Context, workerParams: WorkerParameters) : Worker(
+    context,
+    workerParams
+) {
+    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    var latitude = 0.0
+    var longitude = 0.0
+    private var gotLocation: Boolean = false
+    override fun doWork(): Result {
 
-class WeatherWorker{
-
-    /* init {
-        val periodicWork =
-            PeriodicWorkRequest.Builder(UpdateWeather::class.java, 1, TimeUnit.SECONDS)
-                .build()
-        WorkManager.getInstance().enqueue(periodicWork)
-    } */
-
-    class UpdateWeather(context: Context, workerParams: WorkerParameters) : Worker(context,
-        workerParams
-    ) {
-        private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        var latitude = 0.0
-        var longitude = 0.0
-        private var gotLocation: Boolean = false
-        override fun doWork(): Result {
-
-            val fetch = FetchWeather()
+        val fetch = FetchWeather()
 
             getLastKnownLocation()
 
@@ -55,6 +46,5 @@ class WeatherWorker{
                     }
                 }
         }
-    }
 
 }
