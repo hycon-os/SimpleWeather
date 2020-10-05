@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.revengeos.simpleweather
 
 import android.annotation.SuppressLint
 import android.content.Context

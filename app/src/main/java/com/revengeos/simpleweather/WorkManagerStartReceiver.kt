@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.revengeos.simpleweather
 
 import android.content.BroadcastReceiver
 import android.content.Context

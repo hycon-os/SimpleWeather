@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        applicationId "com.example.myapplication"
+        applicationId "com.revengeos.simpleweather"
         minSdkVersion 28
         targetSdkVersion 29
         versionCode 1

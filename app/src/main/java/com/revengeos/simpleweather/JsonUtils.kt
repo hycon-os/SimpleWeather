@@ -1,6 +1,6 @@
-package com.example.myapplication
+package com.revengeos.simpleweather
 
-import com.example.myapplication.data.WeatherData
+import com.revengeos.simpleweather.data.WeatherData
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import java.io.*

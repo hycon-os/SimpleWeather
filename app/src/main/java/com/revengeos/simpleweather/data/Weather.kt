@@ -1,4 +1,4 @@
-package com.example.myapplication.data
+package com.revengeos.simpleweather.data
 
 
 import com.google.gson.annotations.SerializedName

@@ -1,7 +1,7 @@
-package com.example.myapplication
+package com.revengeos.simpleweather
 
 import android.content.Context
-import com.example.myapplication.data.WeatherData
+import com.revengeos.simpleweather.data.WeatherData
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import retrofit2.Call
