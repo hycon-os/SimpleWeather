@@ -1,9 +1,27 @@
+/*
+ * Copyright (C) 2020 RevengeOS
+ * Copyright (C) 2020 Ethan Halsall
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.revengeos.simpleweather
 
 import android.content.Context
-import com.revengeos.simpleweather.data.WeatherData
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.revengeos.simpleweather.data.WeatherData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,7 +36,7 @@ class FetchWeather(val context :Context) {
 
     private val apiKey = "a9a5a8c0a12e5b11ae2fc673c8edf0c2"
     private val utils = JsonUtils()
-    private val file = File(context.getCacheDir(), "").toString() + "cacheFile.srl"
+    private val file = File(context.cacheDir, "").toString() + "cacheFile.srl"
     var done = false
 
     interface Getweather {

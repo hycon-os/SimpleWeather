@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright (C) 2020 RevengeOS
+  ~ Copyright (C) 2020 Ethan Halsall
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+  <path
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"
+      android:pathData="M85.017,54.316C88.469,54.316 91.267,56.967 91.267,60.237V140.5C91.267,143.77 88.469,140.5 85.017,140.5C81.565,140.5 78.767,143.77 78.767,140.5V60.237C78.767,56.967 81.565,54.316 85.017,54.316Z" />
+  <path
+      android:fillType="evenOdd"
+      android:pathData="M100.779,71.98C94.738,78.328 91.252,87.277 91.252,97.502V148.127C91.252,151.579 88.454,154.377 85.002,154.377C81.55,154.377 78.752,151.579 78.752,148.127V97.502C78.752,84.428 83.235,72.283 91.725,63.362C100.259,54.394 112.487,49.064 127.189,49.064C130.641,49.064 133.439,51.863 133.439,55.314C133.439,58.766 130.641,61.564 127.189,61.564C115.642,61.564 106.776,65.679 100.779,71.98Z">
+    <aapt:attr name="android:fillColor">
+      <gradient
+          android:endX="127.189"
+          android:endY="148.127"
+          android:startX="84.6894"
+          android:startY="55.002"
+          android:type="linear">
+        <item
+            android:color="#FF00B2FF"
+            android:offset="0" />
+        <item
+            android:color="#FF0038FF"
+            android:offset="1" />
+      </gradient>
+    </aapt:attr>
+  </path>
+  <path
+      android:fillColor="#ffffff"
+      android:fillType="evenOdd"
+      android:pathData="M100,12.5C51.675,12.5 12.5,51.675 12.5,100C12.5,148.325 51.675,187.5 100,187.5C148.325,187.5 187.5,148.325 187.5,100C187.5,51.675 148.325,12.5 100,12.5ZM0,100C0,44.771 44.771,0 100,0C155.228,0 200,44.771 200,100C200,155.228 155.228,200 100,200C44.771,200 0,155.228 0,100Z" />
+</vector>
