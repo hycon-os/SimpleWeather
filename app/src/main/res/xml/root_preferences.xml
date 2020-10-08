@@ -16,7 +16,6 @@
   ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <string name="app_name">Simple Weather</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-</resources>
+<PreferenceScreen>
+
+</PreferenceScreen>
