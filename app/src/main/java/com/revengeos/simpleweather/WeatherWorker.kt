@@ -19,8 +19,10 @@
 package com.revengeos.simpleweather
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.LocationServices
@@ -73,6 +75,11 @@ class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Work
 
         return Result.Success()
 
+    }
+
+    override fun onStopped() {
+        Log.d(TAG, "onStopped: WeatherWorker Stopping")
+        super.onStopped()
     }
 
     @SuppressLint("MissingPermission") //todo add permission check

@@ -21,22 +21,30 @@ package com.revengeos.simpleweather
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.ExistingPeriodicWorkPolicy
+import android.util.Log
+import androidx.work.BackoffPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
 class WorkManagerStartReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
+        Log.d("SimpleWeather", "onReceive: " + intent!!.action)
+
+        context?.let { WorkManager.getInstance(it).cancelAllWork() }
+
         val periodicWork =
             PeriodicWorkRequest.Builder(WeatherWorker::class.java, 15, TimeUnit.MINUTES)
+                .setBackoffCriteria(
+                    BackoffPolicy.LINEAR,
+                    PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                    TimeUnit.MILLISECONDS
+                )
                 .build()
+
         context?.let {
-            WorkManager.getInstance(it).enqueueUniquePeriodicWork(
-                "WeatherWorker",
-                ExistingPeriodicWorkPolicy.REPLACE,
-                periodicWork
-            )
+            WorkManager.getInstance(it).enqueue(periodicWork)
         }
+
     }
 }
