@@ -21,8 +21,9 @@ package com.revengeos.simpleweather
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AlertDialog.Builder
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceFragmentCompat
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit
 
 
 class SettingsActivity : AppCompatActivity() {
+    private var isNotGranted: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +46,33 @@ class SettingsActivity : AppCompatActivity() {
             .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        checkPermission()
+        val button = findViewById<Button>(R.id.grant_permission)
+        val permissionScreen = findViewById<LinearLayout>(R.id.location_permission_screen)
+        permissionScreen.visibility = View.GONE
+
+        isNotGranted = checkPermission()
+
+        if (checkPermission()) {
+            permissionScreen.visibility = View.VISIBLE
+            button.setOnClickListener { acquirePermissions() }
+        } else {
+            updateWeather()
+        }
+
     }
 
-    private fun checkPermission() {
+    override fun onResume() {
+        if (isNotGranted && !checkPermission()) {
+            val intent = intent
+            finish()
+            startActivity(intent)
+        }
+        super.onResume()
+    }
 
-        val permissions = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
+    private fun checkPermission(): Boolean {
 
-        val isNotGranted = ActivityCompat.checkSelfPermission(
+        return ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -64,23 +82,16 @@ class SettingsActivity : AppCompatActivity() {
             this,
             Manifest.permission.ACCESS_BACKGROUND_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
+    }
 
-        if (isNotGranted) {
-            ActivityCompat.requestPermissions(this, permissions, 0)
-        }
+    private fun acquirePermissions() {
 
-        if (isNotGranted) {
-            val builder1 = Builder(this)
-            builder1.setMessage("Weather Service requires background location permissions to run")
-            builder1.setCancelable(true)
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
 
-            builder1.setPositiveButton(
-                "Close"
-            ) { dialog, id -> this.finishAffinity() }
-
-            val alert11: AlertDialog = builder1.create()
-            alert11.show()
-        }
+        ActivityCompat.requestPermissions(this, permissions, 0)
     }
 
     private fun updateWeather() {

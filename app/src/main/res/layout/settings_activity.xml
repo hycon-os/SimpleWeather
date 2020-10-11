@@ -58,10 +58,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="?android:textColorPrimary"
-                android:text="Please grant location permission to use Weather service"
+                android:text="Please grant background location permission to use Weather service"
                 android:textAlignment="center"/>
 
             <Button
+                android:id="@+id/grant_permission"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="80dp"
                 android:layout_width="wrap_content"
