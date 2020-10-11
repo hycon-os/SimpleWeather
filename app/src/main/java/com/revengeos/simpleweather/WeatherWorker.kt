@@ -19,24 +19,26 @@
 package com.revengeos.simpleweather
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Worker(
     context,
     workerParams
 ) {
-    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    var latitude = 0.0
-    var longitude = 0.0
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var latitude = 0.0
+    private var longitude = 0.0
     private var gotLocation: Boolean = false
     private val intent: Intent = Intent("org.revengeos.simpleweather.update")
+
     override fun doWork(): Result {
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
         val fetch = FetchWeather(context)
 
@@ -73,13 +75,8 @@ class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Work
             .putExtra("icon", icon)
         context.sendBroadcast(intent)
 
-        return Result.Success()
+        return Result.success()
 
-    }
-
-    override fun onStopped() {
-        Log.d(TAG, "onStopped: WeatherWorker Stopping")
-        super.onStopped()
     }
 
     @SuppressLint("MissingPermission") //todo add permission check
@@ -167,5 +164,4 @@ class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Work
         }
         return -1
     }
-
 }
