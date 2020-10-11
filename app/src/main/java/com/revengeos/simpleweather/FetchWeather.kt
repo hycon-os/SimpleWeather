@@ -32,7 +32,7 @@ import retrofit2.http.Query
 import java.io.File
 
 
-class FetchWeather(val context :Context) {
+class FetchWeather(private val context: Context) {
 
     private val apiKey = "a9a5a8c0a12e5b11ae2fc673c8edf0c2"
     private val utils = JsonUtils()

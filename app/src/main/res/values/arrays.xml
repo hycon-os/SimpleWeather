@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2020 RevengeOS
   ~ Copyright (C) 2020 Ethan Halsall
   ~
@@ -16,17 +16,15 @@
   ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
+    <string-array name="unit_array">
+        <item name="metric">Celsius</item>
+        <item name="imperial">Fahrenheit</item>
+    </string-array>
+    <string-array name="unit_array_values">
+        <item name="metric">0</item>
+        <item name="imperial">1</item>
+    </string-array>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="weather_enabled"
-        android:title="Enable weather service" />
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/unit_array"
-        android:entryValues="@array/unit_array_values"
-        android:key="unit_preference"
-        android:title="Temperature Unit" />
-</PreferenceScreen>
+</resources>
