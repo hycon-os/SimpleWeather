@@ -18,9 +18,20 @@
 
 package com.revengeos.simpleweather
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceFragmentCompat
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -32,7 +43,60 @@ class SettingsActivity : AppCompatActivity() {
             .replace(R.id.settings, SettingsFragment())
             .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        checkPermission()
     }
+
+    private fun checkPermission() {
+
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+
+        val isNotGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+
+        if (isNotGranted) {
+            ActivityCompat.requestPermissions(this, permissions, 0)
+        }
+
+        if (isNotGranted) {
+            val builder1 = Builder(this)
+            builder1.setMessage("Weather Service requires background location permissions to run")
+            builder1.setCancelable(true)
+
+            builder1.setPositiveButton(
+                "Close"
+            ) { dialog, id -> this.finishAffinity() }
+
+            val alert11: AlertDialog = builder1.create()
+            alert11.show()
+        }
+    }
+
+    private fun updateWeather() {
+        val workManager = WorkManager.getInstance(this)
+
+        val request = PeriodicWorkRequestBuilder<WeatherWorker>(
+            PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
+            TimeUnit.MILLISECONDS
+        ).build()
+        workManager.enqueueUniquePeriodicWork(
+            "WeatherWorker",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            request
+        )
+    }
+
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

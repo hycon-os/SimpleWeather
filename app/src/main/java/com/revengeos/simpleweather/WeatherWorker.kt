@@ -18,7 +18,6 @@
 
 package com.revengeos.simpleweather
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.work.Worker
@@ -79,8 +78,7 @@ class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Work
 
     }
 
-    @SuppressLint("MissingPermission") //todo add permission check
-    fun getLastKnownLocation() {
+    private fun getLastKnownLocation() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 if (location != null) {
