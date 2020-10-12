@@ -18,21 +18,14 @@
 
 package com.revengeos.simpleweather
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.util.Log
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import android.app.Application
+import androidx.work.Configuration
 
+class WeatherApplication : Application(), Configuration.Provider {
 
-class WorkManagerStartReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d("SimpleWeather", "onReceive: " + intent!!.action)
+    override fun getWorkManagerConfiguration(): Configuration =
 
-        val workManager = WorkManager.getInstance(context!!)
-
-        val request = OneTimeWorkRequestBuilder<WeatherWorker>().build()
-        workManager.enqueue(request)
-    }
+        Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build()
 }

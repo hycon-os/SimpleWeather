@@ -27,10 +27,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceFragmentCompat
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import java.util.concurrent.TimeUnit
 
 
@@ -99,6 +96,10 @@ class SettingsActivity : AppCompatActivity() {
 
         val request = PeriodicWorkRequestBuilder<WeatherWorker>(
             PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
+            TimeUnit.MILLISECONDS
+        ).setBackoffCriteria(
+            BackoffPolicy.LINEAR,
+            PeriodicWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
             TimeUnit.MILLISECONDS
         ).build()
         workManager.enqueueUniquePeriodicWork(
