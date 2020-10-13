@@ -95,8 +95,10 @@ class SettingsActivity : AppCompatActivity() {
         val workManager = WorkManager.getInstance(this)
 
         val request = PeriodicWorkRequestBuilder<WeatherWorker>(
-            PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
-            TimeUnit.MILLISECONDS
+            30,
+            TimeUnit.MINUTES,
+            15,
+            TimeUnit.MINUTES
         ).setBackoffCriteria(
             BackoffPolicy.LINEAR,
             PeriodicWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
