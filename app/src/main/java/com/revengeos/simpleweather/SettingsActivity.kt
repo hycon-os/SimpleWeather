@@ -36,7 +36,8 @@ import java.util.concurrent.TimeUnit
 class SettingsActivity : AppCompatActivity() {
     private var isNotGranted: Boolean = true
     private lateinit var workManager: WorkManager
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
+    private val workerTag = "WeatherWorker"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +80,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun cancelWork() {
-        workManager.cancelAllWorkByTag("WeatherWorker")
+        workManager.cancelAllWorkByTag(workerTag)
     }
 
     override fun onResume() {
@@ -118,9 +119,7 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateWeather() {
 
         val request = PeriodicWorkRequestBuilder<WeatherWorker>(
-            30,
-            TimeUnit.MINUTES,
-            15,
+            20,
             TimeUnit.MINUTES
         ).setBackoffCriteria(
             BackoffPolicy.LINEAR,
@@ -128,7 +127,7 @@ class SettingsActivity : AppCompatActivity() {
             TimeUnit.MILLISECONDS
         ).build()
         workManager.enqueueUniquePeriodicWork(
-            "WeatherWorker",
+            workerTag,
             ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
