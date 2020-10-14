@@ -69,7 +69,6 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
-
     private fun updatePrefs() {
         val isEnabled = sharedPreferences.getBoolean("weather_enabled", false)
         if (isEnabled) {
@@ -79,24 +78,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-
     private fun cancelWork() {
         workManager.cancelAllWorkByTag("WeatherWorker")
-    }
-
-    //save prefs
-    fun savePrefs(key: String?, value: Boolean?) {
-        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-            this
-        )
-        val editor = sharedPreferences.edit()
-        editor.putBoolean(key, value!!)
-        editor.commit()
-    }
-
-    //get prefs
-    private fun loadPrefs(key: String, value: Boolean): Boolean? {
-        return sharedPreferences.getBoolean(key, value)
     }
 
     override fun onResume() {
