@@ -19,6 +19,7 @@
 package com.revengeos.simpleweather
 
 import android.Manifest
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -27,12 +28,15 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import androidx.work.*
 import java.util.concurrent.TimeUnit
 
 
 class SettingsActivity : AppCompatActivity() {
     private var isNotGranted: Boolean = true
+    private lateinit var workManager: WorkManager
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,19 +47,56 @@ class SettingsActivity : AppCompatActivity() {
             .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        workManager = WorkManager.getInstance(this)
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
         val button = findViewById<Button>(R.id.grant_permission)
         val permissionScreen = findViewById<LinearLayout>(R.id.location_permission_screen)
-        permissionScreen.visibility = View.GONE
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener { prefs, key ->
+            updatePrefs()
+        }
 
         isNotGranted = checkPermission()
+        permissionScreen.visibility = View.GONE
 
         if (checkPermission()) {
             permissionScreen.visibility = View.VISIBLE
             button.setOnClickListener { acquirePermissions() }
         } else {
-            updateWeather()
+            updatePrefs()
         }
 
+    }
+
+
+    private fun updatePrefs() {
+        val isEnabled = sharedPreferences.getBoolean("weather_enabled", false)
+        if (isEnabled) {
+            updateWeather()
+        } else {
+            cancelWork()
+        }
+    }
+
+
+    private fun cancelWork() {
+        workManager.cancelAllWorkByTag("WeatherWorker")
+    }
+
+    //save prefs
+    fun savePrefs(key: String?, value: Boolean?) {
+        val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+            this
+        )
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(key, value!!)
+        editor.commit()
+    }
+
+    //get prefs
+    private fun loadPrefs(key: String, value: Boolean): Boolean? {
+        return sharedPreferences.getBoolean(key, value)
     }
 
     override fun onResume() {
@@ -92,7 +133,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateWeather() {
-        val workManager = WorkManager.getInstance(this)
 
         val request = PeriodicWorkRequestBuilder<WeatherWorker>(
             30,

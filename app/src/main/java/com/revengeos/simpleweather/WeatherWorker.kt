@@ -26,7 +26,7 @@ import androidx.work.WorkerParameters
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class WeatherWorker(val context: Context, workerParams: WorkerParameters) : Worker(
+class WeatherWorker(private val context: Context, workerParams: WorkerParameters) : Worker(
     context,
     workerParams
 ) {
