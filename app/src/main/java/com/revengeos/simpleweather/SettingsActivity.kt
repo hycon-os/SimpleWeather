@@ -33,7 +33,7 @@ import androidx.work.*
 import java.util.concurrent.TimeUnit
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var isNotGranted: Boolean = true
     private lateinit var workManager: WorkManager
     private lateinit var sharedPreferences: SharedPreferences
@@ -54,9 +54,7 @@ class SettingsActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.grant_permission)
         val permissionScreen = findViewById<LinearLayout>(R.id.location_permission_screen)
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener { prefs, key ->
-            updatePrefs()
-        }
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         isNotGranted = checkPermission()
         permissionScreen.visibility = View.GONE
@@ -70,6 +68,10 @@ class SettingsActivity : AppCompatActivity() {
 
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, p1: String?) {
+        updatePrefs()
+    }
+
     private fun updatePrefs() {
         val isEnabled = sharedPreferences.getBoolean("weather_enabled", false)
         if (isEnabled) {
@@ -81,15 +83,22 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun cancelWork() {
         workManager.cancelAllWorkByTag(workerTag)
+        workManager.pruneWork()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onResume() {
+        super.onResume()
         if (isNotGranted && !checkPermission()) {
             val intent = intent
             finish()
             startActivity(intent)
         }
-        super.onResume()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     private fun checkPermission(): Boolean {
@@ -119,8 +128,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun updateWeather() {
 
         val request = PeriodicWorkRequestBuilder<WeatherWorker>(
-            20,
-            TimeUnit.MINUTES
+            PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
+            TimeUnit.MILLISECONDS
         ).setBackoffCriteria(
             BackoffPolicy.LINEAR,
             PeriodicWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
@@ -139,4 +148,5 @@ class SettingsActivity : AppCompatActivity() {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
     }
+
 }
