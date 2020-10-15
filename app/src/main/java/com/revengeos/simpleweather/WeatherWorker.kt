@@ -35,6 +35,7 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
     private var longitude = 0.0
     private var gotLocation: Boolean = false
     private val intent: Intent = Intent("org.revengeos.simpleweather.update")
+    private val timeOutMillis = 10000
 
     override fun doWork(): Result {
 
@@ -45,10 +46,10 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
         getLastKnownLocation()
 
         var time = 0
-        while (!gotLocation && time <= 5000) {
+        while (!gotLocation && time <= timeOutMillis) {
             Thread.sleep(1)
             time++
-            if (time >= 5000) {
+            if (time >= timeOutMillis) {
                 return Result.retry()
             }
 
@@ -57,10 +58,10 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
         fetch.fetchWeather(latitude, longitude)
 
         time = 0
-        while (!fetch.done && time <= 5000) {
+        while (!fetch.done && time <= timeOutMillis) {
             Thread.sleep(1)
             time++
-            if (time >= 5000) {
+            if (time >= timeOutMillis) {
                 return Result.retry()
             }
         }
