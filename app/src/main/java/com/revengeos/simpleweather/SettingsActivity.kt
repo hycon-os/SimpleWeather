@@ -68,7 +68,10 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, p1: String?) {
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        preference: String?
+    ) {
         updatePrefs()
     }
 

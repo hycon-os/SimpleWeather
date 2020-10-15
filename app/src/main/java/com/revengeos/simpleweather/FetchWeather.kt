@@ -19,6 +19,8 @@
 package com.revengeos.simpleweather
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.revengeos.simpleweather.data.WeatherData
@@ -38,6 +40,9 @@ class FetchWeather(private val context: Context) {
     private val utils = JsonUtils()
     private val file = File(context.cacheDir, "").toString() + "cacheFile.srl"
     var done = false
+    private val sharedPreferences: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
+    private val units = sharedPreferences.getString("unit_preference", "")
 
     interface Getweather {
         @GET("weather?")
@@ -59,7 +64,12 @@ class FetchWeather(private val context: Context) {
             retrofit.create(
                 Getweather::class.java
             )
-        val call: Call<JsonObject?>? = service.getCurrentWeatherData(latitude.toString(),longitude.toString(),"metric",apiKey)
+        val call: Call<JsonObject?>? = service.getCurrentWeatherData(
+            latitude.toString(),
+            longitude.toString(),
+            (if (units == "0") "metric" else "imperial"),
+            apiKey
+        )
 
         call!!.enqueue(object : Callback<JsonObject?> {
             override fun onFailure(call: Call<JsonObject?>, t: Throwable) {
