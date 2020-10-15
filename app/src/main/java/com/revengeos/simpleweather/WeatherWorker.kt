@@ -35,7 +35,7 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
     private var longitude = 0.0
     private var gotLocation: Boolean = false
     private val intent: Intent = Intent("org.revengeos.simpleweather.update")
-    private val timeOutMillis = 10000
+    private val timeOutMillis = 5000
 
     override fun doWork(): Result {
 
@@ -67,7 +67,7 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
         }
 
         val data = fetch.getWeatherFromCache()
-        val id = data!!.weather.get(0).id
+        val id = data!!.weather[0].id
         val sunrise = data.sys.sunrise
         val sunset = data.sys.sunset
         val temp = data.main.temp.toInt()
