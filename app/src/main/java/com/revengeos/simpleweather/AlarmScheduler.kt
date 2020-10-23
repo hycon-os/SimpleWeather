@@ -39,14 +39,12 @@ class AlarmScheduler(private val context: Context) {
 
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, WorkManagerStartReceiver::class.java)
-        val alarmIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, 0)
-
-        // Cancel alarms before scheduling new one
-        try {
-            alarmMgr.cancel(alarmIntent)
-        } catch (e: Exception) {
-            Log.e("TAG", "AlarmManager update was not canceled. $e")
-        }
+        val alarmIntent = PendingIntent.getBroadcast(
+            context,
+            REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         alarmMgr.setExactAndAllowWhileIdle(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
