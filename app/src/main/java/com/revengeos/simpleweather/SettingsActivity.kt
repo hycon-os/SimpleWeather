@@ -29,15 +29,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import androidx.work.*
-import java.util.concurrent.TimeUnit
+import androidx.work.WorkManager
 
 
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var isNotGranted: Boolean = true
     private lateinit var workManager: WorkManager
     private lateinit var sharedPreferences: SharedPreferences
-    private val workerTag = "WeatherWorker"
+    private lateinit var alarmScheduler: AlarmScheduler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +49,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
         workManager = WorkManager.getInstance(this)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        alarmScheduler = AlarmScheduler(this)
 
         val button = findViewById<Button>(R.id.grant_permission)
         val permissionScreen = findViewById<LinearLayout>(R.id.location_permission_screen)
@@ -65,7 +65,6 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
         } else {
             updatePrefs()
         }
-
     }
 
     override fun onSharedPreferenceChanged(
@@ -85,8 +84,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     private fun cancelWork() {
-        workManager.cancelAllWorkByTag(workerTag)
-        workManager.pruneWork()
+        alarmScheduler.cancelAlarms()
     }
 
     override fun onPause() {
@@ -129,20 +127,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     private fun updateWeather() {
-
-        val request = PeriodicWorkRequestBuilder<WeatherWorker>(
-            PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS,
-            TimeUnit.MILLISECONDS
-        ).setBackoffCriteria(
-            BackoffPolicy.LINEAR,
-            PeriodicWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
-            TimeUnit.MILLISECONDS
-        ).build()
-        workManager.enqueueUniquePeriodicWork(
-            workerTag,
-            ExistingPeriodicWorkPolicy.REPLACE,
-            request
-        )
+        alarmScheduler.scheduleAlarm()
     }
 
 

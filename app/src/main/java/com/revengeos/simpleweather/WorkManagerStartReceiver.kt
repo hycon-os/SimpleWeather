@@ -22,17 +22,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 
 
 class WorkManagerStartReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("SimpleWeather", "onReceive: " + intent!!.action)
 
-        val workManager = WorkManager.getInstance(context!!)
+        val alarmScheduler = context?.let { AlarmScheduler(it) }
 
-        val request = OneTimeWorkRequestBuilder<WeatherWorker>().build()
-        workManager.enqueue(request)
+        alarmScheduler!!.scheduleAlarm()
+
     }
 }
