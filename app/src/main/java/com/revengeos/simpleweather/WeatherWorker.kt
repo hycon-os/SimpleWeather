@@ -21,6 +21,7 @@ package com.revengeos.simpleweather
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -38,6 +39,9 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
     private val timeOutMillis = 5000
 
     override fun doWork(): Result {
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val units = sharedPreferences.getString("unit_preference", "")
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
@@ -66,11 +70,13 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
             }
         }
 
+
         val data = fetch.getWeatherFromCache()
         val id = data!!.weather[0].id
         val sunrise = data.sys.sunrise
         val sunset = data.sys.sunset
-        val temp = data.main.temp.toInt()
+        val temp = data.main.temp.toInt().toString() + (if (units == "0") " °C" else " °F")
+        println(temp)
         val icon = mapConditionIconToCode(id, sunrise, sunset)
         intent.putExtra("temp", temp)
             .putExtra("icon", icon)
