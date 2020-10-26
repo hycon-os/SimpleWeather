@@ -28,5 +28,6 @@
         android:entries="@array/unit_array"
         android:entryValues="@array/unit_array_values"
         android:key="unit_preference"
+        android:summary="%s"
         android:title="Temperature Unit" />
 </PreferenceScreen>

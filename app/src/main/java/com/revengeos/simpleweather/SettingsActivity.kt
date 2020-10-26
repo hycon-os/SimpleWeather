@@ -19,20 +19,21 @@
 package com.revengeos.simpleweather
 
 import android.Manifest
+import android.app.Activity
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceFragment
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 
 
-class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsActivity : Activity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var isNotGranted: Boolean = true
     private lateinit var workManager: WorkManager
     private lateinit var sharedPreferences: SharedPreferences
@@ -41,11 +42,11 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
-        supportFragmentManager
+        fragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
             .commit()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
         workManager = WorkManager.getInstance(this)
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -131,7 +132,7 @@ class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
 
-    class SettingsFragment : PreferenceFragmentCompat() {
+        class SettingsFragment : PreferenceFragment() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }

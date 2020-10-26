@@ -31,7 +31,8 @@
         android:layout_height="match_parent"
         android:background="?android:colorBackground"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="175dp"
