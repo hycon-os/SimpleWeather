@@ -18,5 +18,5 @@
 
 <resources>
     <string name="app_name">Simple Weather</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Weather settings</string>
 </resources>
