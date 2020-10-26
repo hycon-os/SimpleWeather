@@ -35,7 +35,7 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
     private var latitude = 0.0
     private var longitude = 0.0
     private var gotLocation: Boolean = false
-    private val intent: Intent = Intent("org.revengeos.simpleweather.update")
+    private val intent: Intent = Intent("org.revengeos.simpleweather.UPDATE")
     private val timeOutMillis = 5000
 
     override fun doWork(): Result {
