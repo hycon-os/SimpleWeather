@@ -17,7 +17,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.weathericons">
+    package="com.revengeos.weathericons">
 
     /
 </manifest>
