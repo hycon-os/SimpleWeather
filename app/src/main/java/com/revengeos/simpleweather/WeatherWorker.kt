@@ -76,7 +76,6 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
         val sunrise = data.sys.sunrise
         val sunset = data.sys.sunset
         val temp = data.main.temp.toInt().toString() + (if (units == "0") " °C" else " °F")
-        println(temp)
         val icon = mapConditionIconToCode(id, sunrise, sunset)
         intent.putExtra("temp", temp)
             .putExtra("icon", icon)
