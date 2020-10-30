@@ -23,13 +23,13 @@ import android.graphics.drawable.Drawable
 
 class WeatherIconsHelper {
     companion object {
-        fun getDrawable(state : Int, context : Context): Drawable? {
+        fun getDrawable(state : Int, context : Context): Int? {
             val resourceIdentifier: Int = context.resources.getIdentifier(
                 "weather_$state",
                 "drawable",
                 context.packageName
             )
-            return context.getDrawable(resourceIdentifier)
+            return resourceIdentifier
         }
     }
 }
