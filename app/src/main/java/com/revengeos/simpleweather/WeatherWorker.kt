@@ -21,7 +21,6 @@ package com.revengeos.simpleweather
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -40,12 +39,9 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
 
     override fun doWork(): Result {
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val units = sharedPreferences.getString("unit_preference", "")
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-        val fetch = FetchWeather(context)
+        val fetch = WeatherUtils(context)
 
         getLastKnownLocation()
 
@@ -71,12 +67,8 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
         }
 
 
-        val data = fetch.getWeatherFromCache()
-        val id = data!!.weather[0].id
-        val sunrise = data.sys.sunrise
-        val sunset = data.sys.sunset
-        val temp = data.main.temp.toInt().toString() + (if (units == "0") " °C" else " °F")
-        val icon = mapConditionIconToCode(id, sunrise, sunset)
+        val temp = fetch.getTemperature()
+        val icon = fetch.getIcon()
         intent.putExtra("temp", temp)
             .putExtra("icon", icon)
         context.sendBroadcast(intent)
@@ -95,79 +87,5 @@ class WeatherWorker(private val context: Context, workerParams: WorkerParameters
                     gotLocation = true
                 }
             }
-    }
-
-    private fun mapConditionIconToCode(conditionId: Int, sunrise: Long, sunset: Long): Int {
-        val ut2 = System.currentTimeMillis() / 1000L
-        if (sunrise < ut2 && sunset > ut2) {
-            // First, use condition ID for specific cases
-            when (conditionId) {
-                202, 232, 211 -> return 4
-                212 -> return 3
-                221, 231, 201 -> return 38
-                230, 200, 210 -> return 37
-                300, 301, 302, 310, 311, 312, 313, 314, 321 -> return 9
-                500, 501, 520, 521, 531 -> return 11
-                502, 503, 504, 522 -> return 12
-                511 -> return 10
-                600, 620 -> return 14 // light snow
-                601, 621 -> return 16 // snow
-                602, 622 -> return 41 // heavy snow
-                611, 612 -> return 18 // sleet
-                615, 616 -> return 5 // rain and snow
-                741 -> return 20
-                711, 762 -> return 22
-                701, 721 -> return 21
-                731, 751, 761 -> return 19
-                771 -> return 23
-                781 -> return 0
-                800 -> return 32
-                801 -> return 34
-                802 -> return 28
-                803, 804 -> return 30
-                900 -> return 0 // tornado
-                901 -> return 1 // tropical storm
-                902 -> return 2 // hurricane
-                903 -> return 25 // cold
-                904 -> return 36 // hot
-                905 -> return 24 // windy
-                906 -> return 17 // hail
-            }
-        } else {
-            // First, use condition ID for specific cases
-            when (conditionId) {
-                202, 232, 211 -> return 4
-                212 -> return 3
-                221, 231, 201 -> return 47
-                230, 200, 210 -> return 45
-                300, 301, 302, 310, 311, 312, 313, 314, 321 -> return 9
-                500, 501, 520, 521, 531 -> return 11
-                502, 503, 504, 522 -> return 12
-                511 -> return 10
-                600, 620 -> return 14 // light snow
-                601, 621 -> return 16 // snow
-                602, 622 -> return 41 // heavy snow
-                611, 612 -> return 18 // sleet
-                615, 616 -> return 5 // rain and snow
-                741 -> return 20
-                711, 762 -> return 22
-                701, 721 -> return 21
-                731, 751, 761 -> return 19
-                771 -> return 23
-                781 -> return 0
-                800 -> return 31
-                801 -> return 33
-                802 -> return 27
-                803, 804 -> return 29
-                900 -> return 0 // tornado
-                901 -> return 1 // tropical storm
-                902 -> return 2 // hurricane
-                903 -> return 25 // cold
-                904 -> return 36 // hot
-                905 -> return 24 // windy
-                906 -> return 17 // hail
-            }
-        }
-        return -1
     }
 }
